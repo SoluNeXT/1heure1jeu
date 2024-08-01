@@ -1,0 +1,113 @@
+0 run60000
+10 rem init var
+20 hi=0:t=rnd(ti)
+30 dima(39)
+40 ec=1024
+50 lh=ec+40
+60 lb=ec+24*40
+70 cw=102:cp=65:ce=42:ct=66:sp=32
+80 sc=0:lv=0:xp=0:fx=0:fy=-1
+90 i=0:j=0:m=0
+100 rem init game
+110 sc=0:lv=0:xp=20:fx=0:fy=-1
+200 rem start level
+210 gosub 1500
+220 gosub 10000
+230 goto 2000
+300 rem init timer
+310 t=ti+60*(100-lv/2)
+320 return
+1000 rem display niveau
+1010 print"s]]]]]]]]]]]]]]]]]]]]"lv
+1090 return
+1100 rem display score
+1110 print"s]]]]]]"sc
+1190 return
+1300 rem display player
+1310 pokelb+xp,cp
+1390 return
+1400 rem remove player
+1410 pokelb+xp,sp
+1490 return
+1500 rem init screen
+1510 print"e“score:       niveau:       hi:"hi
+1520 return
+2000 rem boucle principale
+2010 gosub1300
+2100 rem move player
+2110 j=peek(56320)
+2120 if((jand4)=0)and(xp>0)thengosub1400:xp=xp-1
+2130 if((jand8)=0)and(xp<39)thengosub1400:xp=xp+1
+2140 if(fy<0)and((jand16)=0)thenfx=xp:fy=24
+2200 rem boucle tir
+2210 iffy<0then2900
+2220 iffy=0then2700
+2230 iffy<24thenpokeec+fx+40*fy,sp
+2240 fy=fy-1
+2250 iffy<1thenfy=0:goto2900
+2260 ifa(fx)<fythen2600
+2270 poke53280,1
+2280 pokeec+fx+fy*40,ce
+2290 ifa(fx)>1thensc=sc+1
+2300 ifa(fx)=1thensc=sc+5
+2310 fy=0
+2320 gosub 1100
+2330 goto 2900
+2600 pokeec+fx+fy*40,ct
+2610 goto 2900
+2700 ifa(fx)<1then2750
+2710 pokeec+fx+40*a(fx),sp
+2720 ifa(fx)>0then a(fx)=a(fx)-1
+2750 fy=-1
+2760 s=0
+2770 fori=0to39:s=s+a(i):next
+2780 ifs=0then6000
+2900 poke53280,14
+3000 rem boucle mur
+3010 ift>tithen3500
+3020 m=0
+3030 fori=0to39
+3040 ifa(i)=0then3100
+3050 ifi<>fxthen
+3060 ifa(i)=fythen
+3070 a(i)=a(i)+1
+3080 pokeec+i+a(i)*40,cw
+3100 rem plus de mur
+3110 ifa(i)>mthenm=a(i)
+3120 nexti
+3200 ifm>23then5000
+3210 ifm=0then6000
+3220 gosub300
+3230 goto2000
+3500 rem fin boucle mur
+3510 goto2000
+5000 rem perdu
+5010 poke53280,2
+5020 ifsc>hithenhi=sc
+5030 gosub 1500
+5040 gosub 1000
+5050 gosub 1100
+5060 print"sqqqqqqq]]]]]]]]]]]]]]Partie terminee"
+5090 end
+6000 rem niveau fini
+6010 poke53280,13
+6020 sc=sc+100*lv
+6030 gosub 1100
+6040 fori=0to200:poke53280,13:poke53280,14:next
+6100 goto200
+10000 rem new level
+10010 iflv<99thenlv=lv+1
+10020 fori=0to39
+10030 h=2+int(rnd(1)*(15+lv/15)*0.5)
+10040 ifh>21thenh=21
+10050 a(i)=h:ifh=0then10090
+10060 forj=1toh
+10070 pokeec+i+j*40,cw
+10080 nextj
+10090 nexti
+10100 gosub 300
+10110 gosub1000
+10120 gosub1100
+10900 return
+60000 save "@0:game",8
+60001 run 10
